@@ -1,4 +1,5 @@
 inventory = 0
+failed_attempts = 0
 user_input = ""
 
 while user_input != "quit":
@@ -9,11 +10,14 @@ while user_input != "quit":
         quantity = int(user_input)
         if quantity < 0:
             print("Please enter a positive integer.")
+            failed_attempts += 1
             continue
         inventory += quantity
         print(f"Added {quantity} to inventory. Current inventory: {inventory}")
     else:
         print("Invalid input. Please enter a positive integer or 'quit' to exit.")
+        failed_attempts += 1
+        continue
 
     #requriement 7 overstock alert
     if inventory > 500:
@@ -21,3 +25,4 @@ while user_input != "quit":
         break
     
 print(f"Final inventory: {inventory}")
+print(f"Total failed attempts to add stock: {failed_attempts}")
