@@ -7,6 +7,9 @@ while user_input != "quit":
         break
     if user_input.isdigit():
         quantity = int(user_input)
+        if quantity < 0:
+            print("Please enter a positive integer.")
+            continue
         inventory += quantity
         print(f"Added {quantity} to inventory. Current inventory: {inventory}")
     else:
