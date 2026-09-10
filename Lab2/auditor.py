@@ -14,4 +14,10 @@ while user_input != "quit":
         print(f"Added {quantity} to inventory. Current inventory: {inventory}")
     else:
         print("Invalid input. Please enter a positive integer or 'quit' to exit.")
+
+    #requriement 7 overstock alert
+    if inventory > 500:
+        print("Warning: Inventory exceeds 500 units. Consider reducing stock.")
+        break
+    
 print(f"Final inventory: {inventory}")
