@@ -1,4 +1,5 @@
 inventory = 0
+number_of_deliveries = 0
 failed_attempts = 0
 user_input = ""
 
@@ -20,7 +21,10 @@ def get_valid_input():
 
 
 def process_delivery(current_total, new_value):
-    pass
+    current_total += new_value
+    print(f"Added {new_value} to inventory. Current inventory: {current_total}")
+    return current_total
+
 
 
 def calculate_tax(amount):
@@ -40,10 +44,9 @@ while user_input != "quit":
         failed_attempts += 1
         continue
     else:
-        quantity = user_input
-        inventory += quantity
-        print(f"Added {quantity} to inventory. Current inventory: {inventory}")
-        
+        inventory = process_delivery(inventory, user_input)
+        number_of_deliveries += 1
+
     #requriement 7 overstock alert
     if inventory > 500:
         print("Warning: Inventory exceeds 500 units. Consider reducing stock.")
