@@ -2,6 +2,24 @@ inventory = 0
 failed_attempts = 0
 user_input = ""
 
+
+def get_valid_input():
+    pass
+
+
+def process_delivery(current_total, new_value):
+    pass
+
+
+def calculate_tax(amount):
+    pass
+
+
+def generate_report(total_units, failed_attempts):
+    pass
+
+
+
 while user_input != "quit":
     user_input = input("Enter a stock quantity to add to inventory (or type 'quit' to exit): ")
     if user_input == "quit":
