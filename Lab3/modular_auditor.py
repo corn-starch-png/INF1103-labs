@@ -35,7 +35,9 @@ def calculate_tax(amount):
 
 
 def generate_report(total_units, failed_attempts):
-    pass
+    print(f"Final inventory: {total_units}")
+    print(f"Total deliveries processed: {number_of_deliveries}")
+    print(f"Total failed attempts to add stock: {failed_attempts}")
 
 
 
@@ -54,6 +56,5 @@ while user_input != "quit":
     if inventory > 500:
         print("Warning: Inventory exceeds 500 units. Consider reducing stock.")
         break
-    
-print(f"Final inventory: {inventory}")
-print(f"Total failed attempts to add stock: {failed_attempts}")
+
+generate_report(inventory, failed_attempts)
