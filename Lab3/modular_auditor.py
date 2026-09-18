@@ -23,12 +23,15 @@ def get_valid_input():
 def process_delivery(current_total, new_value):
     current_total += new_value
     print(f"Added {new_value} to inventory. Current inventory: {current_total}")
+    tax_amount = calculate_tax(new_value)
+    print(f"Tax for this delivery: {tax_amount}")
     return current_total
 
 
-
 def calculate_tax(amount):
-    pass
+    tax_rate = 0.1  # 10% tax rate
+    tax_amount = amount * tax_rate
+    return tax_amount
 
 
 def generate_report(total_units, failed_attempts):
