@@ -1,4 +1,5 @@
 inventory = 0
+data = []
 number_of_deliveries = 0
 failed_attempts = 0
 user_input = ""
@@ -41,14 +42,20 @@ def generate_report(total_units, failed_attempts):
 
 
 def load_inventory():
+    inventory = []
     try:
-        with open("Lab4/inventory_data.txt", "r") as file:
+        with open("inventory_data.txt", "r") as file:
             data = file.read().splitlines()
-        print(data)
+        for i in data:
+            inventory.append(i.split(","))
+        
     except FileNotFoundError:
         print("No previous inventory data found. Starting fresh.")
 
-load_inventory()
+    return inventory
+    
+data = load_inventory()
+print(data)
 
 '''
 while user_input != "quit":
