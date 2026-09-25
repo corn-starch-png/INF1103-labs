@@ -29,7 +29,7 @@ def process_delivery(current_total, new_value):
     if current_total > 500:
         print("Warning: Inventory exceeds 500 units. Consider reducing stock.")
     tax_amount = calculate_tax(new_value)
-    print(f"Order updated | Tax for this update: {tax_amount}")
+    print(f"\nOrder updated | Tax for this update: {tax_amount}")
     return current_total
 
 
