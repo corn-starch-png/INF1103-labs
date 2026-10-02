@@ -91,6 +91,10 @@ def update_product():
     return
 
 
+def search_product():
+    pass  # Placeholder for search functionality
+
+
 def process_delivery(current_total, new_value, price):
     current_total += new_value
     
@@ -160,6 +164,21 @@ while user_input != "6":
     print("6. Exit")
     print("----------------------------")
     user_input = input("Enter your choice: ")
+    if user_input == "1":
+        display_inventory()
+    elif user_input == "2":
+        new_product()
+    elif user_input == "3":
+        update_product()
+    elif user_input == "4":
+        search_product()
+    elif user_input == "5":
+        save_inventory(inventory)
+    elif user_input == "6":
+        print("Exiting the program. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please try again.")
 
 save_inventory(inventory)
 generate_report(units_processed, failed_attempts)
