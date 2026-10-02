@@ -5,36 +5,35 @@ failed_attempts = 0
 user_input = ""
 
 
-def get_new_product():
-    stock_input = input("\nEnter a item name to add to inventory (or type 'quit' to exit): ")
-    if stock_input == "quit":
-        return stock_input, None, None
-    else:
-        amt_input = input("Enter the quantity to add: ")
-        if amt_input.isdigit():
-            quantity = int(amt_input)
-            if quantity < 0:
-                print("Please enter a positive integer.")
-                return None, None, None
+def add_product(current_id,number_of_transactions, units_processed, failed_attempts):
+    def get_new_product():
+        stock_input = input("\nEnter a item name to add to inventory (or type 'quit' to exit): ")
+        if stock_input == "quit":
+            return stock_input, None, None
         else:
-            print("Invalid input. Please enter a positive integer")
-            return None, None, None
-
-        price_input = input("Enter the price of the item: ")
-        if price_input.replace('.', '', 1).isdigit():
-            price = float(price_input)
-            if price < 0:
-                print("Please enter a positive number.")
+            amt_input = input("Enter the quantity to add: ")
+            if amt_input.isdigit():
+                quantity = int(amt_input)
+                if quantity < 0:
+                    print("Please enter a positive integer.")
+                    return None, None, None
+            else:
+                print("Invalid input. Please enter a positive integer")
                 return None, None, None
-        else:
-            print("Invalid input. Please enter a positive number.")
-            return None, None, None
-    
 
-    return stock_input, quantity, price
+            price_input = input("Enter the price of the item: ")
+            if price_input.replace('.', '', 1).isdigit():
+                price = float(price_input)
+                if price < 0:
+                    print("Please enter a positive number.")
+                    return None, None, None
+            else:
+                print("Invalid input. Please enter a positive number.")
+                return None, None, None
+        
+        return stock_input, quantity, price
 
 
-def add_product():
     item, quantity, price = get_new_product()
     if item == "quit":
         return
@@ -57,42 +56,45 @@ def add_product():
     return
 
 
-def get_update_product():
+def update_stock(number_of_transactions, units_processed, failed_attempts):
     id_input = input("\nEnter a item code to update in inventory (or type 'quit' to exit): ")
     if id_input == "quit":
-        return id_input, None
-    else:
-        amt_input = input("Enter the quantity to add: ")
-        if amt_input.isdigit():
-            quantity = int(amt_input)
-            if quantity < 0:
-                print("Please enter a positive integer.")
-                return None, None
-        else:
-            print("Invalid input. Please enter a positive integer")
-            return None, None
-
-    return id_input, quantity
-
-
-def update_stock():
-    item, quantity = get_update_product()
-    if item == "quit":
         return
     for i in inventory["products"]:
-        if i["name"] == item:
-            print("Product found. Updating quantity...")
+        if str(i["id"]) == id_input: 
+            print("Product found.")
+            print(f"{i['id']}, {i['name']}, {i['quantity']}, {i['price']}")
+
+            amt_input = input("Enter the quantity to add: ")
+            if amt_input.isdigit():
+                quantity = int(amt_input)
+                if quantity < 0:
+                    print("Please enter a positive integer.")
+                    failed_attempts += 1
+                    return
+            else:
+                print("Invalid input. Please enter a positive integer")
+                failed_attempts += 1
+                return 
             i["quantity"] = process_delivery(i["quantity"], quantity, i["price"])
-            print(f"New quantity for {item}: {i['quantity']}")
+            print(f"New quantity for {i['name']}: {i['quantity']}")
             print("Stock updated successfully.")
+            number_of_transactions += 1
+            units_processed += quantity
             return
         
     print("Product not found.")
+    failed_attempts += 1
     return
 
 
 def search_product():
-    pass  # Placeholder for search functionality
+    product_id = input("\nEnter the product code to search (or type 'quit' to exit): ")
+    for item in inventory["products"]:
+        if item["id"] == product_id:
+            print(f"Product found: {item['name']}, Quantity: {item['quantity']}, Price: ${item['price']:.2f}")
+            return
+    print("Product not found.")
 
 
 def process_delivery(current_total, new_value, price):
@@ -137,6 +139,7 @@ def load_inventory():
 def display_all():
     print("\nCurrent Inventory:")
     print("-----------------------------")
+    print("ID, Name, Quantity, Price")
     for item in inventory["products"]:
         print(f"{item['id']}, {item['name']}, {item['quantity']}, {item['price']}")
     print("-----------------------------")
@@ -153,7 +156,7 @@ print("==========================================")
 
 inventory = load_inventory()
 current_id = 1000 + len(inventory["products"])  # Update current_id based on loaded inventory
-
+print(inventory)
 while user_input != "6":
     print("----------- MENU -----------")
     print("1. Display All Products")
@@ -167,9 +170,9 @@ while user_input != "6":
     if user_input == "1":
         display_all()
     elif user_input == "2":
-        add_product()
+        add_product(current_id, number_of_transactions, units_processed, failed_attempts)
     elif user_input == "3":
-        update_stock()
+        update_stock(number_of_transactions, units_processed, failed_attempts)
     elif user_input == "4":
         search_product()
     elif user_input == "5":
