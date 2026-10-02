@@ -34,7 +34,7 @@ def get_new_product():
     return stock_input, quantity, price
 
 
-def new_product():
+def add_product():
     item, quantity, price = get_new_product()
     if item == "quit":
         return
@@ -75,7 +75,7 @@ def get_update_product():
     return id_input, quantity
 
 
-def update_product():
+def update_stock():
     item, quantity = get_update_product()
     if item == "quit":
         return
@@ -134,7 +134,7 @@ def load_inventory():
     return data
 
 
-def display_inventory():
+def display_all():
     print("\nCurrent Inventory:")
     print("-----------------------------")
     for item in inventory["products"]:
@@ -165,11 +165,11 @@ while user_input != "6":
     print("----------------------------")
     user_input = input("Enter your choice: ")
     if user_input == "1":
-        display_inventory()
+        display_all()
     elif user_input == "2":
-        new_product()
+        add_product()
     elif user_input == "3":
-        update_product()
+        update_stock()
     elif user_input == "4":
         search_product()
     elif user_input == "5":
