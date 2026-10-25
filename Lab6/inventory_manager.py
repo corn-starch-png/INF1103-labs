@@ -61,45 +61,49 @@ def add_product(current_id,number_of_transactions, units_processed, failed_attem
     return
 
 
-def update_stock(number_of_transactions, units_processed, failed_attempts):
-    id_input = input("\nEnter a item code to update in inventory (or type 'quit' to exit): ")
-    if id_input == "quit":
-        return
-    for i in inventory["products"]:
-        if str(i["id"]) == id_input: 
-            print("Product found.")
-            print(f"{i['id']}, {i['name']}, {i['quantity']}, {i['price']}")
 
-            amt_input = input("Enter the quantity to add: ")
-            if amt_input.isdigit():
-                quantity = int(amt_input)
-                if quantity < 0:
-                    print("Please enter a positive integer.")
-                    failed_attempts += 1
-                    return
-            else:
-                print("Invalid input. Please enter a positive integer")
+def update_stock(number_of_transactions, units_processed, failed_attempts):
+    inventory.display_all()
+    name_input = input("\nEnter item name to update inventory (or type 'quit' to exit): ")
+    if name_input == "quit":
+        return
+    item = inventory.search_product(name_input)
+    if item:
+        print("Product found.")
+        item.display_information()
+        amt_input = input("Enter the quantity to add: ")
+        if amt_input.isdigit():
+            quantity = int(amt_input)
+            if quantity < 0:
+                print("Please enter a positive integer.")
                 failed_attempts += 1
-                return 
-            i["quantity"] = process_delivery(i["quantity"], quantity, i["price"])
-            print(f"New quantity for {i['name']}: {i['quantity']}")
-            print("Stock updated successfully.")
-            number_of_transactions += 1
-            units_processed += quantity
-            return
+                return
+        else:
+            print("Invalid input. Please enter a positive integer")
+            failed_attempts += 1
+            return 
         
-    print("Product not found.")
-    failed_attempts += 1
-    return
+        item.update_stock(quantity)
+        tax = calculate_tax(quantity*item.get_price())
+        print(f"Stock updated successfully. Note additional ${tax:.2f} tax")
+        number_of_transactions += 1
+        units_processed += quantity
+        return
+    else:    
+        print("Product not found.")
+        failed_attempts += 1
+        return
+
 
 
 def search_product():
-    product_id = input("\nEnter the product code to search (or type 'quit' to exit): ")
-    for item in inventory["products"]:
-        if item["id"] == product_id:
-            print(f"Product found: {item['name']}, Quantity: {item['quantity']}, Price: ${item['price']:.2f}")
-            return
-    print("Product not found.")
+    product_name = input("\nEnter the product name to search (or type 'quit' to exit): ")
+    item = inventory.search_product(product_name)
+    if item:
+        item.display_information()
+    else:
+        print("Product not found.")
+
 
 
 def process_delivery(current_total, new_value, price):
