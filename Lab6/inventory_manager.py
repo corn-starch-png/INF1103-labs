@@ -106,17 +106,6 @@ def search_product():
 
 
 
-def process_delivery(current_total, new_value, price):
-    current_total += new_value
-    
-    if current_total > 500:
-        print("Warning: Inventory exceeds 500 units. Consider reducing stock.")
-    tax_amount = calculate_tax(new_value * price)
-    print(f"\nProduct updated | Tax for this update: ${tax_amount:.2f}")
-    return current_total
-
-
-
 def calculate_tax(amount):
     tax_rate = 0.1  # 10% tax rate
     tax_amount = amount * tax_rate
@@ -132,37 +121,6 @@ def generate_report(total_units, failed_attempts):
     print("\nFinal Inventory:")
     inventory.display_all()
 
-
-
-def load_inventory():
-    print("Current Orders:")
-    try:
-        with open("inventory_data.json", "r") as file:
-            data = json.load(file)
-        print("Loaded inventory from inventory_data.json")
-      
-    except FileNotFoundError:
-        print("No previous inventory data found. Starting fresh.")
-        data = { "products": [] }
-
-    return data
-
-
-
-def display_all():
-    print("\nCurrent Inventory:")
-    print("-----------------------------")
-    print("ID, Name, Quantity, Price")
-    for item in inventory["products"]:
-        print(f"{item['id']}, {item['name']}, {item['quantity']}, {item['price']}")
-    print("-----------------------------")
-
-
-
-def save_inventory(inventory):
-    with open("inventory_data.json", "w") as file:
-        json.dump(inventory, file)
-    print("Inventory saved to inventory_data.json")
 
 
 print("==========================================")
