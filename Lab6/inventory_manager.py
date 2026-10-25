@@ -116,10 +116,12 @@ def process_delivery(current_total, new_value, price):
     return current_total
 
 
+
 def calculate_tax(amount):
     tax_rate = 0.1  # 10% tax rate
     tax_amount = amount * tax_rate
     return tax_amount
+
 
 
 def generate_report(total_units, failed_attempts):
@@ -128,10 +130,8 @@ def generate_report(total_units, failed_attempts):
     print(f"Total transactions processed: {number_of_transactions}")
     print(f"Total failed attempts to add stock: {failed_attempts}")
     print("\nFinal Inventory:")
-    print("id, Name, Quantity, Price")
-    for item in inventory["products"]:
-        print(f"{item['id']}, {item['name']}, {item['quantity']}, {item['price']}")
-    print("-----------------------------------")
+    inventory.display_all()
+
 
 
 def load_inventory():
@@ -148,6 +148,7 @@ def load_inventory():
     return data
 
 
+
 def display_all():
     print("\nCurrent Inventory:")
     print("-----------------------------")
@@ -157,17 +158,25 @@ def display_all():
     print("-----------------------------")
 
 
+
 def save_inventory(inventory):
     with open("inventory_data.json", "w") as file:
         json.dump(inventory, file)
     print("Inventory saved to inventory_data.json")
 
+
 print("==========================================")
 print("Welcome to the Inventory Management System")
 print("==========================================")
 
-inventory = load_inventory()
-current_id = 1000 + len(inventory["products"])  # Update current_id based on loaded inventory
+try:
+    inventory = FileManager.load_from_json("inventory_data.json")
+    print("Loaded inventory from inventory_data.json")
+except FileNotFoundError:
+    inventory = Inventory()
+    print("No previous inventory data found. Starting fresh.")
+
+current_id = 1000 + len(inventory.get_products())  # Update current_id based on loaded inventory
 
 while user_input != "6":
     print("----------- MENU -----------")
@@ -180,7 +189,7 @@ while user_input != "6":
     print("----------------------------")
     user_input = input("Enter your choice: ")
     if user_input == "1":
-        display_all()
+        inventory.display_all()
     elif user_input == "2":
         add_product(current_id, number_of_transactions, units_processed, failed_attempts)
     elif user_input == "3":
@@ -188,12 +197,15 @@ while user_input != "6":
     elif user_input == "4":
         search_product()
     elif user_input == "5":
-        save_inventory(inventory)
+        FileManager.save_to_json(inventory, "inventory_data.json")
+        print("Inventory saved!")
     elif user_input == "6":
         break
     else:
         print("Invalid choice. Please try again.")
 
-save_inventory(inventory)
+
+FileManager.save_to_json(inventory, "inventory_data.json")
 generate_report(units_processed, failed_attempts)
 print("Exiting the program. Goodbye!")
+
