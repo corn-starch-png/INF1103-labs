@@ -1,3 +1,6 @@
+import json
+
+
 class Product:
     def __init__(self, product_id: int, name: str, price: float, stock: int):
         self.__product_id = product_id
@@ -48,3 +51,41 @@ class Inventory:
         print(f"{'Product ID':<12}| {'Name':<{name_width}}| {'Price':<7}| {'Stock':<7}| ")
         for item in self.__inventory_list:
             print(f"{item.get_product_id():<12}| {item.get_name():<{name_width}}| {item.get_price():<7}| {item.get_stock():<7}| ")
+
+
+class FileManager:
+    @staticmethod
+    def load_from_json(file_path: str) -> Inventory:
+        inventory = Inventory()
+        
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            # Loop through the list of products in the JSON
+            for item_data in data.get("products", []):
+                product = Product(
+                    product_id=item_data["id"],
+                    name=item_data["name"],
+                    price=item_data["price"],
+                    stock=item_data["quantity"]
+                )
+                inventory.add_product(product)
+                
+        return inventory
+
+    @staticmethod
+    def save_to_json(inventory: Inventory, file_path: str) -> None:
+        products_data = []
+        
+        for item in inventory.get_products():      
+            product_dict = {
+                "id": item.get_product_id(),
+                "name": item.get_name(),
+                "quantity": item.get_stock(),
+                "price": item.get_price()
+            }
+            products_data.append(product_dict)
+            
+        data = {"products": products_data}
+        
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
