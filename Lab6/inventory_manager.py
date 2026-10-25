@@ -1,15 +1,16 @@
-import json
+from classes import Product, Inventory, FileManager
 units_processed = 0
 number_of_transactions = 0
 failed_attempts = 0
 user_input = ""
 
 
+
 def add_product(current_id,number_of_transactions, units_processed, failed_attempts):
     def get_new_product():
-        stock_input = input("\nEnter a item name to add to inventory (or type 'quit' to exit): ")
-        if stock_input == "quit":
-            return stock_input, None, None
+        item_name = input("\nEnter a item name to add to inventory (or type 'quit' to exit): ")
+        if item_name == "quit":
+            return item_name, None, None
         else:
             amt_input = input("Enter the quantity to add: ")
             if amt_input.isdigit():
@@ -31,27 +32,31 @@ def add_product(current_id,number_of_transactions, units_processed, failed_attem
                 print("Invalid input. Please enter a positive number.")
                 return None, None, None
         
-        return stock_input, quantity, price
+        return item_name, quantity, price
 
 
-    item, quantity, price = get_new_product()
-    if item == "quit":
+    item_name, quantity, price = get_new_product()
+    if item_name == "quit":
         return
-    elif item is None or quantity is None or price is None:
+    elif item_name is None or quantity is None or price is None:
         failed_attempts += 1
         return
     else:
-        if item not in [i["name"] for i in inventory["products"]]:
-            inventory["products"].append({"id": current_id, "name": item, "quantity": quantity, "price": price})
+        existing_product = inventory.search_product(item_name)
+        if not existing_product:
+            product = Product(current_id, item_name, quantity, price)
+            inventory.add_product(product)
             print("New Product Added:")
-            print(f"{current_id}, {item}, {quantity}, {price}")
+            product.display_information()
+
             tax = calculate_tax(quantity * price)
             print(f"Tax for this product: ${tax:.2f}")
+
             current_id += 1
             number_of_transactions += 1
             units_processed += quantity
         else:
-            print("Product already exists. Please use update option to modify the quantity.")
+            print("[ERROR] Product already exists. Please use update option to modify the quantity.")
             failed_attempts += 1
     return
 
