@@ -35,6 +35,13 @@ class Product(ABC):
         pass
 
 
+class CanBeShipped(ABC):
+    @abstractmethod
+    def calculate_shipping_cost(self) -> float:
+        """calculate shipping cost based on weight and other factors"""
+        pass
+
+
 class PhysicalProduct(Product, CanBeShipped):
     def __init__(self, product_id: int, name: str, price: float, stock: int, weight: float):
         super().__init__(product_id, name, price, stock)
@@ -50,6 +57,8 @@ class PhysicalProduct(Product, CanBeShipped):
     def get_fulfillment_info(self) -> str:
         return f"This product requires shipping"
 
+    def calculate_shipping_cost(self) -> float:
+        return self.__weight * 10.0
 
 
 class DigitalProduct(Product):
