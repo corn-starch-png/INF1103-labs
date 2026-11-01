@@ -1,4 +1,4 @@
-from classes import Product, Inventory, FileManager
+from classes import PhysicalProduct, DigitalProduct, Product, Inventory, FileManager
 units_processed = 0
 number_of_transactions = 0
 failed_attempts = 0
@@ -12,6 +12,28 @@ def add_product(current_id,number_of_transactions, units_processed, failed_attem
         if item_name == "quit":
             return item_name, None, None
         else:
+            print("1. Physical Product")
+            print("2. Digital Product")
+            type_input = input("Enter the type of product (1,2): ").strip()
+            if type_input in ["1", "2"]:
+                if type_input == "1":
+                    product_type = "Physical"
+                else:
+                    product_type = "Digital"
+            else:
+                print("Invalid input. Please enter 1 or 2.")
+                return None, None, None
+
+            weight_or_size_input = input(f"Enter the {'weight (kg)' if product_type == 'Physical' else 'download size (GB)'} of the item: ")
+            if weight_or_size_input.replace('.', '', 1).isdigit():
+                weight_or_size = float(weight_or_size_input)
+                if weight_or_size < 0:
+                    print("Please enter a positive number.")
+                    return None, None, None
+            else:
+                print("Invalid input. Please enter a positive number.")
+                return None, None, None
+
             amt_input = input("Enter the quantity to add: ")
             if amt_input.isdigit():
                 quantity = int(amt_input)
@@ -32,10 +54,10 @@ def add_product(current_id,number_of_transactions, units_processed, failed_attem
                 print("Invalid input. Please enter a positive number.")
                 return None, None, None
         
-        return item_name, quantity, price
+        return item_name, quantity, price, weight_or_size, product_type
 
 
-    item_name, quantity, price = get_new_product()
+    item_name, quantity, price, weight_or_size, product_type = get_new_product()
     if item_name == "quit":
         return
     elif item_name is None or quantity is None or price is None:
@@ -44,7 +66,10 @@ def add_product(current_id,number_of_transactions, units_processed, failed_attem
     else:
         existing_product = inventory.search_product(item_name)
         if not existing_product:
-            product = Product(current_id, item_name, quantity, price)
+            if product_type == "Physical":
+                product = PhysicalProduct(current_id, item_name, price, quantity, weight_or_size)
+            else:
+                product = DigitalProduct(current_id, item_name, price, quantity, weight_or_size)
             inventory.add_product(product)
             print("New Product Added:")
             product.display_information()
@@ -101,6 +126,10 @@ def search_product():
     item = inventory.search_product(product_name)
     if item:
         item.display_information()
+        item.get_fulfillment_info()
+        if item.get_fulfillment_info() == "This product requires shipping":
+            shipping_cost = item.calculate_shipping_cost()
+            print(f"Shipping Cost: ${shipping_cost:.2f}")
     else:
         print("Product not found.")
 

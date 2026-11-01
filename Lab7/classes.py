@@ -108,12 +108,24 @@ class FileManager:
             data = json.load(file)
             # Loop through the list of products in the JSON
             for item_data in data.get("products", []):
-                product = Product(
-                    product_id=item_data["id"],
-                    name=item_data["name"],
-                    price=item_data["price"],
-                    stock=item_data["quantity"]
-                )
+                if item_data["type"] == "PhysicalProduct":
+                    product = PhysicalProduct(
+                        product_id=item_data["id"],
+                        name=item_data["name"],
+                        price=item_data["price"],
+                        stock=item_data["quantity"],
+                        weight=item_data["weightorsize"]
+                    )
+                elif item_data["type"] == "DigitalProduct":
+                    product = DigitalProduct(
+                        product_id=item_data["id"],
+                        name=item_data["name"],
+                        price=item_data["price"],
+                        stock=item_data["quantity"],
+                        download_size=item_data["weightorsize"]
+                    )
+                else:
+                    continue  # Skip unknown product types
                 inventory.add_product(product)
                 
         return inventory
@@ -122,13 +134,25 @@ class FileManager:
     def save_to_json(inventory: Inventory, file_path: str) -> None:
         products_data = []
         
-        for item in inventory.get_products():      
-            product_dict = {
-                "id": item.get_product_id(),
-                "name": item.get_name(),
-                "quantity": item.get_stock(),
-                "price": item.get_price()
-            }
+        for item in inventory.get_products():
+            if item.__class__.__name__ == "PhysicalProduct":
+                product_dict = {
+                    "type": "PhysicalProduct",
+                    "id": item.get_product_id(),
+                    "name": item.get_name(),
+                    "quantity": item.get_stock(),
+                    "price": item.get_price(),
+                    "weightorsize": item.get_weight()
+                }
+            elif item.__class__.__name__ == "DigitalProduct":
+                product_dict = {
+                    "type": "DigitalProduct",
+                    "id": item.get_product_id(),
+                    "name": item.get_name(),
+                    "quantity": item.get_stock(),
+                    "price": item.get_price(),
+                    "weightorsize": item.get_download_size()
+                }
             products_data.append(product_dict)
             
         data = {"products": products_data}
