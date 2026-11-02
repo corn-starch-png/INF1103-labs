@@ -1,4 +1,6 @@
-from classes import Product, Inventory, FileManager
+from classes.Product import Product
+from classes.Inventory import Inventory
+from classes.FileManager import FileManager
 units_processed = 0
 number_of_transactions = 0
 failed_attempts = 0

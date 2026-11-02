@@ -72,7 +72,8 @@ def save_inventory(inventory):
         for item in inventory:
             file.write(",".join(map(str, item)) + "\n")
     print("Inventory saved to inventory_data.txt")
-  
+
+
 inventory = load_inventory()
 current_id = 1000 + len(inventory)  # Update current_id based on loaded inventory
 
@@ -99,6 +100,5 @@ while user_input != "quit":
         number_of_transactions += 1
         units_processed += quantity
 
-    
 save_inventory(inventory)
 generate_report(units_processed, failed_attempts)

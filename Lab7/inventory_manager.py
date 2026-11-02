@@ -1,4 +1,8 @@
-from classes import PhysicalProduct, DigitalProduct, Product, Inventory, FileManager
+from classes.PhysicalProduct import PhysicalProduct
+from classes.DigitalProduct import DigitalProduct
+from classes.Inventory import Inventory
+from classes.FileManager import FileManager
+
 units_processed = 0
 number_of_transactions = 0
 failed_attempts = 0

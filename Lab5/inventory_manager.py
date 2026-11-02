@@ -114,12 +114,15 @@ def calculate_tax(amount):
 
 
 def generate_report(total_units, failed_attempts):
+    print("\n---------Inventory Report---------")
     print(f"Total units processed: {total_units}")
     print(f"Total transactions processed: {number_of_transactions}")
     print(f"Total failed attempts to add stock: {failed_attempts}")
     print("\nFinal Inventory:")
+    print("id, Name, Quantity, Price")
     for item in inventory["products"]:
         print(f"{item['id']}, {item['name']}, {item['quantity']}, {item['price']}")
+    print("-----------------------------------")
 
 
 def load_inventory():
@@ -156,7 +159,7 @@ print("==========================================")
 
 inventory = load_inventory()
 current_id = 1000 + len(inventory["products"])  # Update current_id based on loaded inventory
-print(inventory)
+
 while user_input != "6":
     print("----------- MENU -----------")
     print("1. Display All Products")
@@ -178,10 +181,10 @@ while user_input != "6":
     elif user_input == "5":
         save_inventory(inventory)
     elif user_input == "6":
-        print("Exiting the program. Goodbye!")
         break
     else:
         print("Invalid choice. Please try again.")
 
 save_inventory(inventory)
 generate_report(units_processed, failed_attempts)
+print("Exiting the program. Goodbye!")
